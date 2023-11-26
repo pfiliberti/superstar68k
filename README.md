@@ -13,32 +13,28 @@ GPU internal draw commands. We used this a lot to experiment and to
 exercise the hardware.
 
 Here are the machin specifications:
-SUPERSTAR COMPUTER INFORMATION
- # : ITEMS                    SPECIFICATIONS
---------------------------------------------------------------------
-1  : CRT Display            : 640 Dots X 200 Rasters X 256 Color/Dot
-2  : Dot Clock              : 14.318 MHZ
-3  : 2Clk                   : 7.159 MHZ
-4  : ACRTC Type             : 8 MHZ
-5  : Shift Quantity         : 8 Pixels Per Memory Access
-6  : Access Mode            : Interleaved access mode
-7  : Graphic bit mode       : 8 Bits / Pixel
-8  : Address Increment mode : +4
-9  : Graphics Memory Type   : HD50464 or Equiv. 64K x 4 bits 120ns QTY=8
-10 : Main Microprocessor    : 68000-8 Cpu
-11 : Program ROM Size	    : 256K WORDS (512K Bytes)
-12 : Program RAM Size	    : 8K Words (16K RAM)
+#SUPERSTAR COMPUTER INFORMATION
 
---------------------------------------------------------------------
+1. ITEMS                    SPECIFICATIONS
+2.  CRT Display            : 640 Dots X 200 Rasters X 256 Color/Dot
+3.  Dot Clock              : 14.318 MHZ
+4.  2Clk                   : 7.159 MHZ
+5.  ACRTC Type             : 8 MHZ
+6.  Shift Quantity         : 8 Pixels Per Memory Access
+7.  Access Mode            : Interleaved access mode
+8.  Graphic bit mode       : 8 Bits / Pixel
+9.  Address Increment mode : +4
+10. Graphics Memory Type   : HD50464 or Equiv. 64K x 4 bits 120ns QTY=8
+11. Main Microprocessor    : 68000-8 Cpu
+12. Program ROM Size	    : 256K WORDS (512K Bytes)
+13. Program RAM Size	    : 8K Words (16K RAM)
 
-68000 MEMORY MAP
-----------------
-ADDRESS         FUNCTION
---------------------------------------------------------------------
- 00000- 7FFFF   256K WORDS OF ROM
- 80000- 83FFF   8K WORDS OF RAM
- AX000- AX002   63484 VIDEO IC #1 PORTS
- AX400- AX7FF   VIDEO DAC #1 RAM LOCATIONS
+#68000 Memory Map
+1. ADDRESS         FUNCTION
+2. 00000- 7FFFF   256K WORDS OF ROM
+3. 80000- 83FFF   8K WORDS OF RAM
+4. AX000- AX002   63484 VIDEO IC #1 PORTS
+4. AX400- AX7FF   VIDEO DAC #1 RAM LOCATIONS
 
 Posting to Github so other may see the design and possible work on a new
 board with a few less features not needed for the arcade market but to
