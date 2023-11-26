@@ -1,0 +1,59 @@
+GMODE - GRAPHICS MODE	      >GMODE 0=640X200 1 = 640X400 (RESETS ACRTC)
+PALETTE - PALETTE	      >PALETTE (0-255),RED,GREEN,BLUE=(0-63)
+HSCROLL - HORIZONTAL SCROLL   >HSCROLL SCREEN#,(0-8) SMOOTH SCROLL BY BITS
+HZOOM - HORIZONTAL ZOOM       >HZOOM (0-8)
+VZOOM - VERTICAL ZOOM	      >VZOOM (0-8)
+
+1 PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+WPR   - Write parameter reg   >WPR   0,RN,D
+WT    - Write		      >WT    0,0,D
+MOD   - Modify		      >MOD   0,MM,D
+CRCL  - Circle		      >CRCL  C,(AREA,COL,OPM),r
+PTN   - Pattern 	      >(SL,SD),(AREA,COL,OPM),SZ
+
+2 PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+ORG   - Origin		      >ORG   0,DPH,DPL
+AMOVE - Absolute move	      >AMOVE 0,X,Y
+RMOVE - Relative move	      >RMOVE 0,dX,dY
+ALINE - Absolute line	      >ALINE (AREA,COL,OPM),X,Y
+RLINE - Relative line	      >RLINE (AREA,COL,OPM),dX,dY
+ARCT  - Absolute Rectangle    >ARCT  (AREA,COL,OPM),X,Y
+RRCT  - Relative Rectangle    >RRCT  (AREA,COL,OPM),dX,dY
+AFRCT - Absolute Filled Rect  >AFRCT (AREA,COL,OPM),X,Y
+RFRCT - Relative Filled Rect  >RFRCT (AREA,COL,OPM),dX,dY
+
+3 PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+CLR   - Clear		      >CLR   0,0,D,Ax,Ay
+SCLR  - Selective Clear       >SCLR  0,MM,D,Ax,Ay
+ELPS  - Elipse		      >ELPS  C,(AREA,COL,OPM),a,b,dX
+
+4 PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+CPY   - Copy		      >CPY   (S,DSD),0,Sah,Sal,Ax,Ay
+SCPY  - Selective Copy	      >SCPY  (S,DSD),MM,Sah,Sal,Ax,Ay
+AARC  - Absolute Arc	      >AARC  C,(AREA,COL,OPM),Xc,Yc,Xe,Ye
+RARC  - Relative Arc	      >RARC  C,(AREA,COL,OPM),dXc,dYc,dXe,dYe
+AGCPY - Absolute Graphic Copy >AGCPY (S,DSD),(AREA00OPM),Xs,Ys,DX,DY
+RGCPY - Relative Graphic Copy >RGCPY (S,DSD),(AREA00OPM),dXs,dYs,DX,DY
+
+6 PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+AEARC - Absolute Ellipse Arc  >C,(AREA,COL,OPM),a,b,Xc,Yc,Xe,Ye
+REARC - Relative Ellipse Arc  >C,(AREA,COL,OPM),a,b,dXc,dYc,dXe,dYe
+
+n PARAMETER GRAPHIC COMMANDS
+---------------------------------------------------------------------
+WPTN  - Write Pattern Ram     >PRA,n,D1..Dn
+APLL  - Absolute Polyline     >(AREA,COL,OPM),n,X1,Y1,...Xn,Yn
+RPLL  - Relative Polyline     >(AREA,COL,OPM),n,dX1,dY1,...dXn,DYn
+APLG  - Absolute Polygon      >(AREA,COL,OPM),n,X1,Y1,...Xn,Yn
+RPLG  - Relative Polygon      >(AREA,COL,OPM),n,dX1,dY1,...dXn,DYn
+
+SPECIAL GRAPHIC COMMANDS
+---------------------------------------------------------------------
+PAINT - Paint		      >e,(AREA00000)
+DOT   - Dot		      >(AREA,COL,OPM)
+
