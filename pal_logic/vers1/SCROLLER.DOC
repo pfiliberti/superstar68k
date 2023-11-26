@@ -1,0 +1,195 @@
+
+
+PAL16R4                                         PAL DESIGN SPECIFICATION       
+SCROLLER                                         PETER FILIBERTI 11/5/87       
+HORIZONTAL SMOOTH SCROLL CONTROLLER                                            
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK HSD0 HSD1 HSD2 /HSYNC /NOSH /WE A0 A1 VCC 
+/OE /WE3 /WE2 /SHOK /Q2 /Q1 /Q0 /WE1 /WE0 GND 
+  
+  
+Q0      := HSD0 * /HSYNC * NOSH                 ;LOAD 
+        +  /Q0 * /NOSH                          ;COUNT 
+  
+Q1      := HSD1 * /HSYNC * NOSH                 ;LOAD 
+        +  /Q0 * Q1 * /NOSH                     ;COUNT 
+        +  Q0 * /Q1 * /NOSH                     ;COUNT 
+  
+Q2      := HSD2 * /HSYNC * NOSH                 ;LOAD 
+        +  Q0 * Q1 * /Q2 * /NOSH                ;COUNT 
+        +  /Q0 * /Q1 * Q2 * /NOSH               ;COUNT 
+        +  Q0 * /Q1 * Q2 * /NOSH                ;COUNT 
+        +  /Q0 * Q1 * Q2 * /NOSH                ;COUNT 
+  
+SHOK    := Q0 * Q1 * Q2 * /HSYNC * /NOSH 
+        + SHOK * /HSYNC * /NOSH 
+  
+IF (VCC) WE0 = /A0 * /A1 * WE 
+  
+IF (VCC) WE1 = A0 * /A1 * WE 
+  
+IF (VCC) WE2 = /A0 * A1 * WE 
+  
+IF (VCC) WE3 = A0 * A1 * WE 
+  
+  
+FUNCTION TABLE 
+  
+CLK /OE HSD0 HSD1 HSD2 Q2 Q1 Q0 /HSYNC /NOSH /WE A1 A0 /WE0 /WE1 /WE2 /WE3 
+/SHOK 
+  
+;CK /OE HSD0 HSD1 HSD2 Q2 Q1 Q0 /HSYN /NOSH /WE A1 A0 /WE0 /WE1 /WE2 /WE3 /SHOK
+ 
+-------------------------------------------------------------------------------
+ 
+ C   L   X    X    X   X  X  X     X     X    X   X  X   X    X    X    X    X 
+ C   L   X    X    X   X  X  X     X     X    H   X  X   H    H    H    H    X 
+ C   L   X    X    X   X  X  X     X     X    L   L  L   L    H    H    H    X 
+ C   L   X    X    X   X  X  X     X     X    L   L  H   H    L    H    H    X 
+ C   L   X    X    X   X  X  X     X     X    L   H  L   H    H    L    H    X 
+ C   L   X    X    X   X  X  X     X     X    L   H  H   H    H    H    L    X 
+ C   L   X    X    X   X  X  X     L     L    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   L  L  L     H     L    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   L  L  H     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   L  H  L     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   L  H  H     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   H  L  L     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   H  L  H     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   H  H  L     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   H  H  H     H     H    X   X  X   X    X    X    X    H 
+ C   L   L    L    L   L  L  L     H     H    X   X  X   X    X    X    X    L 
+------------------------------------------------------------------------------ 
+
+
+HORIZONTAL SMOOTH SCROLL CONTROLLER                                            
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   GND         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+        HSD0   * 2*                             *19*   /WE0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        HSD1   * 3*                             *18*   /WE1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        HSD2   * 4*                             *17*   /Q0         
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /HSYNC   * 5*                             *16*   /Q1         
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /NOSH   * 6*                             *15*   /Q2         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         /WE   * 7*                             *14*   /SHOK       
+               ****                             ****
+                  *                             *
+               ****                             ****
+          A0   * 8*                             *13*   /WE2        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          A1   * 9*                             *12*   /WE3        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         VCC   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - HORIZONTAL SMOOTH SCROLL CONTROLLER                                            
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 1 ---- ---- ---- ---- ---- -X-- -X-- -X-- /A0*/A1*WE                      
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 9 ---- ---- ---- ---- ---- -X-- X--- -X-- A0*/A1*WE                       
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 X--- ---- ---- X--- -X-- ---- ---- ---- HSD0*/HSYNC*NOSH                
+17 ---- ---- --X- ---- X--- ---- ---- ---- /Q0*/NOSH                       
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- X--- ---- X--- -X-- ---- ---- ---- HSD1*/HSYNC*NOSH                
+25 ---- ---- --X- ---X X--- ---- ---- ---- /Q0*Q1*/NOSH                    
+26 ---- ---- ---X --X- X--- ---- ---- ---- Q0*/Q1*/NOSH                    
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 ---- ---- X--- X--- -X-- ---- ---- ---- HSD2*/HSYNC*NOSH                
+33 ---- ---- ---X ---X X-X- ---- ---- ---- Q0*Q1*/Q2*/NOSH                 
+34 ---- ---- --X- --X- X--X ---- ---- ---- /Q0*/Q1*Q2*/NOSH                
+35 ---- ---- ---X --X- X--X ---- ---- ---- Q0*/Q1*Q2*/NOSH                 
+36 ---- ---- --X- ---X X--X ---- ---- ---- /Q0*Q1*Q2*/NOSH                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 ---- ---- ---X X--X X--X ---- ---- ---- Q0*Q1*Q2*/HSYNC*/NOSH           
+41 ---- ---- ---- X--- X--- ---X ---- ---- SHOK*/HSYNC*/NOSH               
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+49 ---- ---- ---- ---- ---- -X-- -X-- X--- /A0*A1*WE                       
+50 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+57 ---- ---- ---- ---- ---- -X-- X--- X--- A0*A1*WE                        
+58 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  459
+
+SECURITY FUSE XX
+
+                                                                             

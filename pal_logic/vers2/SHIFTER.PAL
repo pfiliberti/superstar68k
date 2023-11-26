@@ -1,0 +1,58 @@
+PAL16R8                                         PAL DESIGN SPECIFICATION
+SHIFTER                                          PETER FILIBERTI 11/5/87
+DOT SHIFT CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+/CLK /SLEN /HSYNC NC NC NC NC NC NC GND
+/OE /PS7 /PS6 /PS5 /PS4 /PS3 /PS2 /PS1 /PS0 VCC
+
+
+PS0     := PS7 * /HSYNC * SLEN           ;SHIFT FUNCTION
+        +  PS0 * /HSYNC * /SLEN          ;HOLD FUNCTION
+        +  HSYNC                         ;RESET FUNCTION
+
+PS1     := PS0 * /HSYNC * SLEN
+        +  PS1 * /HSYNC * /SLEN
+
+PS2     := PS1 * /HSYNC * SLEN
+        +  PS2 * /HSYNC * /SLEN
+
+PS3     := PS2 * /HSYNC * SLEN
+        +  PS3 * /HSYNC * /SLEN
+
+PS4     := PS3 * /HSYNC * SLEN
+        +  PS4 * /HSYNC * /SLEN
+
+PS5     := PS4 * /HSYNC * SLEN
+        +  PS5 * /HSYNC * /SLEN
+
+PS6     := PS5 * /HSYNC * SLEN
+        +  PS6 * /HSYNC * /SLEN
+
+PS7     := PS6 * /HSYNC * SLEN
+        +  PS7 * /HSYNC * /SLEN
+
+FUNCTION TABLE
+
+
+/OE CLK /SLEN /HSYNC /PS0 /PS1 /PS2 /PS3 /PS4 /PS5 /PS6 /PS7
+------------------------------------------------------------------------------
+ L   C    X     L     L    H     H    H    H    H    H    H     RESET FUNC.
+ L   C    L     H     H    L     H    H    H    H    H    H     SHIFT FUNC.
+ L   C    L     H     H    H     L    H    H    H    H    H     SHIFT FUNC.
+ L   C    L     H     H    H     H    L    H    H    H    H     SHIFT FUNC.
+ L   C    L     H     H    H     H    H    L    H    H    H     SHIFT FUNC.
+ L   C    H     H     H    H     H    H    L    H    H    H     HOLD  FUNC.
+ L   C    H     H     H    H     H    H    L    H    H    H     HOLD  FUNC.
+ L   C    L     H     H    H     H    H    H    L    H    H     SHIFT FUNC.
+ L   C    L     H     H    H     H    H    H    H    L    H     SHIFT FUNC.
+ L   C    L     H     H    H     H    H    H    H    H    L     SHIFT FUNC.
+ L   C    L     H     L    H     H    H    H    H    H    H     SHIFT FUNC.
+ L   C    L     H     H    L     H    H    H    H    H    H     SHIFT FUNC.
+ L   C    X     L     L    H     H    H    H    H    H    H     RESET FUNC.
+------------------------------------------------------------------------------
+
+DESCRIPTION
+
+THIS PAL IS USED AS A PIXEL SHIFTER. SHIFTING IS DISABLED BY THE /SLEN BEING
+HI. IF /HSYNC IS LOW THEN A RESET OCCURES AND PS0 IS USED AS FIRST PIXEL.
+

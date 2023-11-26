@@ -1,0 +1,164 @@
+
+
+PAL16R4                                         PAL DESIGN SPECIFICATION       
+PLIC                                              PETER FILIBERTI 7/1/87       
+PETERS LOGIC INTERFACE CONTROLLER                                              
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK /NOSH /P7 /SLOAD /SLEN PCLK /DAC NC NC GND 
+/OE DCLK NC /RSEL NC NC NC NC NC VCC 
+  
+RSEL    := RSEL * /P7 * /SLOAD * /NOSH          ;HOLD 
+        +  RSEL * P7 * SLOAD  * /NOSH           ;HOLD 
+        +  /P7 * SLOAD * /NOSH                  ;LOAD 0 
+        +  P7 * /SLOAD * /SLEN                  ;WAIT FOR /SLEN LOW 
+  
+IF (VCC) /DCLK = /PCLK 
+               + DAC 
+  
+FUNCTION TABLE 
+  
+/OE CLK /NOSH /P7 /SLOAD /SLEN /RSEL  PCLK /DAC DCLK 
+----------------------------------------------------- 
+ L   C    L    X    X      L     H     L     H   L       ;RESET /RSEL = 1 
+ L   C    H    L    L      L     H     H     H   H       ;HOLD STATE 
+ L   C    H    H    H      L     H     L     L   L       ;HOLD STATE 
+ L   C    H    H    L      L     L     H     L   L       ;SEL REG 1 /RSEL = 0 
+ L   C    H    L    L      L     L     X     X   X       ;HOLD STATE 
+ L   C    H    H    H      L     L     X     X   X       ;HOLD STATE 
+ L   C    H    L    H      H     L     X     X   X       ;HOLD STATE 
+ L   C    H    L    H      L     H     X     X   X       ;SEL REG 0 /RSEL = 1 
+------------------------------- 
+
+
+PETERS LOGIC INTERFACE CONTROLLER                                              
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+       /NOSH   * 2*                             *19*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+         /P7   * 3*                             *18*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /SLOAD   * 4*                             *17*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /SLEN   * 5*                             *16*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+        PCLK   * 6*                             *15*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /DAC   * 7*                             *14*   /RSEL       
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 8*                             *13*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 9*                             *12*   DCLK        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - PETERS LOGIC INTERFACE CONTROLLER                                              
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 1 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 9 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+17 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+25 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+33 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 X--- X--- X--- ---- ---- ---X ---- ---- RSEL*/P7*/SLOAD*/NOSH           
+41 X--- -X-- -X-- ---- ---- ---X ---- ---- RSEL*P7*SLOAD*/NOSH             
+42 X--- X--- -X-- ---- ---- ---- ---- ---- /P7*SLOAD*/NOSH                 
+43 ---- -X-- X--- X--- ---- ---- ---- ---- P7*/SLOAD*/SLEN                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+49 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+50 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 ---- ---- ---- ---- ---- ---- ---- ----                                 
+57 ---- ---- ---- ---- -X-- ---- ---- ---- /PCLK                           
+58 ---- ---- ---- ---- ---- -X-- ---- ---- DAC                             
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  208
+
+SECURITY FUSE XX
+
+                                                                                       

@@ -1,0 +1,193 @@
+
+
+PAL16R8                                         PAL DESIGN SPECIFICATION       
+SHIFTER                                          PETER FILIBERTI 11/5/87       
+DOT SHIFT CONTROLLER                                                           
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+/CLK /SLEN /HSYNC NC NC NC NC NC NC GND 
+/OE /PS7 /PS6 /PS5 /PS4 /PS3 /PS2 /PS1 /PS0 VCC 
+  
+  
+PS0     := PS7 * /HSYNC * SLEN           ;SHIFT FUNCTION 
+        +  PS0 * /HSYNC * /SLEN          ;HOLD FUNCTION 
+        +  HSYNC                         ;RESET FUNCTION 
+  
+PS1     := PS0 * /HSYNC * SLEN 
+        +  PS1 * /HSYNC * /SLEN 
+  
+PS2     := PS1 * /HSYNC * SLEN 
+        +  PS2 * /HSYNC * /SLEN 
+  
+PS3     := PS2 * /HSYNC * SLEN 
+        +  PS3 * /HSYNC * /SLEN 
+  
+PS4     := PS3 * /HSYNC * SLEN 
+        +  PS4 * /HSYNC * /SLEN 
+  
+PS5     := PS4 * /HSYNC * SLEN 
+        +  PS5 * /HSYNC * /SLEN 
+  
+PS6     := PS5 * /HSYNC * SLEN 
+        +  PS6 * /HSYNC * /SLEN 
+  
+PS7     := PS6 * /HSYNC * SLEN 
+        +  PS7 * /HSYNC * /SLEN 
+  
+FUNCTION TABLE 
+  
+  
+/OE CLK /SLEN /HSYNC /PS0 /PS1 /PS2 /PS3 /PS4 /PS5 /PS6 /PS7 
+------------------------------------------------------------------------------ 
+ L   C    X     L     L    H     H    H    H    H    H    H     RESET FUNC. 
+ L   C    L     H     H    L     H    H    H    H    H    H     SHIFT FUNC. 
+ L   C    L     H     H    H     L    H    H    H    H    H     SHIFT FUNC. 
+ L   C    L     H     H    H     H    L    H    H    H    H     SHIFT FUNC. 
+ L   C    L     H     H    H     H    H    L    H    H    H     SHIFT FUNC. 
+ L   C    H     H     H    H     H    H    L    H    H    H     HOLD  FUNC. 
+ L   C    H     H     H    H     H    H    L    H    H    H     HOLD  FUNC. 
+ L   C    L     H     H    H     H    H    H    L    H    H     SHIFT FUNC. 
+ L   C    L     H     H    H     H    H    H    H    L    H     SHIFT FUNC. 
+ L   C    L     H     H    H     H    H    H    H    H    L     SHIFT FUNC. 
+ L   C    L     H     L    H     H    H    H    H    H    H     SHIFT FUNC. 
+ L   C    L     H     H    L     H    H    H    H    H    H     SHIFT FUNC. 
+ L   C    X     L     L    H     H    H    H    H    H    H     RESET FUNC. 
+------------------------------------------------------------------------------ 
+  
+DESCRIPTION 
+  
+THIS PAL IS USED AS A PIXEL SHIFTER. SHIFTING IS DISABLED BY THE /SLEN BEING 
+HI. IF /HSYNC IS LOW THEN A RESET OCCURES AND PS0 IS USED AS FIRST PIXEL. 
+
+
+DOT SHIFT CONTROLLER                                                           
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+        /CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R8            *
+               ****                             ****
+       /SLEN   * 2*                             *19*   /PS0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /HSYNC   * 3*                             *18*   /PS1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 4*                             *17*   /PS2        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 5*                             *16*   /PS3        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 6*                             *15*   /PS4        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 7*                             *14*   /PS5        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 8*                             *13*   /PS6        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 9*                             *12*   /PS7        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R8  - DOT SHIFT CONTROLLER                                                           
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 -X-- X--- ---- ---- ---- ---- ---- ---X PS7*/HSYNC*SLEN                 
+ 1 X--X X--- ---- ---- ---- ---- ---- ---- PS0*/HSYNC*/SLEN                
+ 2 ---- -X-- ---- ---- ---- ---- ---- ---- HSYNC                           
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 -X-X X--- ---- ---- ---- ---- ---- ---- PS0*/HSYNC*SLEN                 
+ 9 X--- X--X ---- ---- ---- ---- ---- ---- PS1*/HSYNC*/SLEN                
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 -X-- X--X ---- ---- ---- ---- ---- ---- PS1*/HSYNC*SLEN                 
+17 X--- X--- ---X ---- ---- ---- ---- ---- PS2*/HSYNC*/SLEN                
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 -X-- X--- ---X ---- ---- ---- ---- ---- PS2*/HSYNC*SLEN                 
+25 X--- X--- ---- ---X ---- ---- ---- ---- PS3*/HSYNC*/SLEN                
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 -X-- X--- ---- ---X ---- ---- ---- ---- PS3*/HSYNC*SLEN                 
+33 X--- X--- ---- ---- ---X ---- ---- ---- PS4*/HSYNC*/SLEN                
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 -X-- X--- ---- ---- ---X ---- ---- ---- PS4*/HSYNC*SLEN                 
+41 X--- X--- ---- ---- ---- ---X ---- ---- PS5*/HSYNC*/SLEN                
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 -X-- X--- ---- ---- ---- ---X ---- ---- PS5*/HSYNC*SLEN                 
+49 X--- X--- ---- ---- ---- ---- ---X ---- PS6*/HSYNC*/SLEN                
+50 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 -X-- X--- ---- ---- ---- ---- ---X ---- PS6*/HSYNC*SLEN                 
+57 X--- X--- ---- ---- ---- ---- ---- ---X PS7*/HSYNC*/SLEN                
+58 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  495
+
+SECURITY FUSE XX
+
+                                      

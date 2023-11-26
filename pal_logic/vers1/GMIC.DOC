@@ -1,0 +1,173 @@
+
+
+PAL16R4                                         PAL DESIGN SPECIFICATION       
+GMIC                                              PETER FILIBERTI 7/1/87       
+GRAPHIC MEMORY INTERFACE CONTROLLER                                            
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK /MCYC MRD /AS /DRAW /HSYNC /RST /SLEN /SLOK GND 
+OE /RAS /CAS /Q0 /Q1 /SLOAD /RE /WE /ATR VCC 
+  
+Q0    := /Q0 * /AS * /RST 
+  
+Q1    := /Q0 * Q1 * /AS * /RST 
+      +  Q0 * /Q1 * /AS * /RST 
+  
+RE    := /HSYNC * MRD * /RST 
+  
+SLOAD := Q0 * /Q1 * /HSYNC * MRD * /DRAW * SLOK * /RST 
+  
+IF (VCC) RAS = /Q0 * /Q1 * /AS * /RST 
+             + Q0 * /Q1 * /RST 
+             + /Q0 * Q1 * /RST 
+  
+IF (VCC) CAS = /MCYC * Q0 * /Q1 * /HSYNC * /RST 
+             + /MCYC * /Q0 * Q1 * /HSYNC * /RST 
+  
+IF (VCC) WE = CAS * /HSYNC * /MRD * /RST 
+  
+IF (VCC) ATR = /Q0 * HSYNC * /RST 
+  
+  
+  
+DESCRIPTION 
+  
+THIS CONFIGURATION ATTACHES TO THE HD63484 ADVANCED CRT CONTROLLER 
+AND PRODUCES THE PROPER RAS CAS RE AND WE SIGNALS FOR INTERFACING 
+TO DYNAMIC RAM. IT ALSO PRODICES AN SLOAD SIGNAL WHICH IS FED TO THE 
+VIDEO SHIFT REGISTERS TO LOAD DATA INTO THEM. 
+WARNING! PROPAGATION DELAYS ARE USED TO CONTROL TIMING! SEE CHART! 
+NOTE SLEN IS NOT NEEDED 
+
+
+GRAPHIC MEMORY INTERFACE CONTROLLER                                            
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+       /MCYC   * 2*                             *19*   /ATR        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         MRD   * 3*                             *18*   /WE         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         /AS   * 4*                             *17*   /RE         
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /DRAW   * 5*                             *16*   /SLOAD      
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /HSYNC   * 6*                             *15*   /Q1         
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /RST   * 7*                             *14*   /Q0         
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /SLEN   * 8*                             *13*   /CAS        
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /SLOK   * 9*                             *12*   /RAS        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   OE          
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - GRAPHIC MEMORY INTERFACE CONTROLLER                                            
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 1 ---- ---- ---- ---- -X-- X-X- ---- ---- /Q0*HSYNC*/RST                  
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 ---- -X-- ---- ---- X--- X--- ---X ---- CAS*/HSYNC*/MRD*/RST            
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 ---- X--- ---- ---- X--- X--- ---- ---- /HSYNC*MRD*/RST                 
+17 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- X--- ---- X--- X-X- X--X ---- -X-- Q0*/Q1*/HSYNC*MRD*/DRAW*SLOK*/R 
+25 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 ---- ---- X--- ---- ---X X-X- ---- ---- /Q0*Q1*/AS*/RST                 
+33 ---- ---- X--- ---- --X- X--X ---- ---- Q0*/Q1*/AS*/RST                 
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 ---- ---- X--- ---- ---- X-X- ---- ---- /Q0*/AS*/RST                    
+41 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 X--- ---- ---- ---- X-X- X--X ---- ---- /MCYC*Q0*/Q1*/HSYNC*/RST        
+50 X--- ---- ---- ---- X--X X-X- ---- ---- /MCYC*/Q0*Q1*/HSYNC*/RST        
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 ---- ---- ---- ---- ---- ---- ---- ----                                 
+57 ---- ---- X--- ---- --X- X-X- ---- ---- /Q0*/Q1*/AS*/RST                
+58 ---- ---- ---- ---- --X- X--X ---- ---- Q0*/Q1*/RST                     
+59 ---- ---- ---- ---- ---X X-X- ---- ---- /Q0*Q1*/RST                     
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  464
+
+SECURITY FUSE XX
+
+                                                                                                                           

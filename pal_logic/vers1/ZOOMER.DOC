@@ -1,0 +1,204 @@
+
+
+PAL16R4                                          PAL DESIGN SPECIFICATION      
+ZOOMER                                            PETER FILIBERTI 11/5/87      
+HORIZONTAL ZOOM CONTROLLER                                                     
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+/CLK HZ0 HZ1 HZ2 HZ3 /SHOK /HSYNC /SLOAD /VID GND 
+/OE /SLEN /DAC /Q3 /Q2 /Q1 /Q0 /ACRT A11 VCC 
+  
+Q0     := HZ0 * /SHOK * /HSYNC                  ;FIRST LOAD 
+        + HZ0 * SLEN * SHOK                     ;CONSECUTIVE LOADS 
+        + /Q0 * /SLEN * SHOK                    ;TOGGLE DOWN 
+  
+Q1     := HZ1 * /SHOK * /HSYNC                  ;FIRST LOAD 
+        + HZ1 * SLEN * SHOK                     ;CONSECUTIVE LOADS 
+        + Q0 * Q1 * /SLEN * SHOK                ;TOGGLE 
+        + /Q0 * /Q1 * /SLEN * SHOK              ;TOGGLE 
+  
+Q2     := HZ2 * /SHOK * /HSYNC                  ;FIRST LOAD 
+        + HZ2 * SLEN * SHOK                     ;CONSECUTIVE LOADS 
+        + /Q0 * /Q1 * /Q2 * /SLEN * SHOK        ;TOGGLE 
+        + Q0 * Q1 * Q2 * /SLEN * SHOK           ;TOGGLE 
+        + /Q0 * Q1 * Q2 * /SLEN * SHOK          ;TOGGLE 
+        + Q0 * /Q1 * Q2 * /SLEN * SHOK          ;TOGGLE 
+  
+Q3     := HZ3 * /SHOK * /HSYNC                  ;FIRST LOAD 
+        + HZ3 * SLEN * SHOK                     ;CONSECUTIVE LOADS 
+        + Q3 * Q0 * /SLEN * SHOK                ;TOGGLE 
+        + Q3 * Q1 * /SLEN * SHOK                ;TOGGLE 
+        + Q3 * Q2 * /SLEN * SHOK                ;TOGGLE 
+  
+IF (VCC) SLEN = /Q0 * /Q1 * /Q2 * /Q3 * SHOK 
+  
+IF (VCC) DAC  = VID * A11 
+  
+IF (VCC) ACRT = VID * /A11 
+  
+FUNCTION TABLE 
+  
+CLK /OE /VID A11 /DAC /ACRT /HSYNC /SHOK HZ3 HZ2 HZ1 HZ0 Q3 Q2 Q1 Q0 /SLEN 
+  
+;                                         H H H H 
+;                                         Z Z Z Z 
+;CLK /OE /VID A11 /DAC /ACRT /HSYNC /SHOK 3 2 1 0 Q3 Q2 Q1 Q0 /SLEN 
+--------------------------------------------------------------------------- 
+  C   L   H   X   H     H      X      X   X X X X  X  X  X  X   X 
+  C   L   L   H   L     H      X      X   X X X X  X  X  X  X   X 
+  C   L   L   L   H     L      X      X   X X X X  X  X  X  X   X 
+  C   L   X   X   X     X      H      H   H H H H  H  H  H  H   H  HBLANK LOAD 
+  C   L   X   X   X     X      H      L   H H H H  H  H  H  L   H  COUNT DOWN 
+  C   L   X   X   X     X      H      L   H H H H  H  H  L  H   H 
+  C   L   X   X   X     X      H      L   H H H H  H  H  L  L   H 
+  C   L   X   X   X     X      H      L   H H H H  H  L  H  H   H 
+  C   L   X   X   X     X      H      L   H H H H  H  L  H  L   H 
+  C   L   X   X   X     X      H      L   H H H H  H  L  L  H   H 
+  C   L   X   X   X     X      H      L   H H H H  H  L  L  L   H 
+  C   L   X   X   X     X      H      L   H H H H  L  H  H  H   H 
+  C   L   X   X   X     X      H      L   H H H H  L  H  H  L   H 
+  C   L   X   X   X     X      H      L   H H H H  L  H  L  H   H 
+  C   L   X   X   X     X      H      L   H H H H  L  H  L  L   H 
+  C   L   X   X   X     X      H      L   H H H H  L  L  H  H   H 
+  C   L   X   X   X     X      H      L   H H H H  L  L  H  L   H 
+  C   L   X   X   X     X      H      L   H H H H  L  L  L  H   H 
+--------------------------------------------------------------------------- 
+  
+DESCRIPTION 
+THIS IC DECODES THE /VID & A11 LINES TO PRODUCE /ACRTC AND /DAC WHICH ENABLE 
+THE VIDEO CONTROLLER OR DAC WHEN ACCESSED. IT ALSO LOADS THE HORIZONTAL 
+ZOOM COUNT INTO A COUNTER AND DELAYS PIXELS BY THAT COUNT USING THE /SLEN 
+LINE. 
+
+
+HORIZONTAL ZOOM CONTROLLER                                                     
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+        /CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+         HZ0   * 2*                             *19*   A11         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         HZ1   * 3*                             *18*   /ACRT       
+               ****                             ****
+                  *                             *
+               ****                             ****
+         HZ2   * 4*                             *17*   /Q0         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         HZ3   * 5*                             *16*   /Q1         
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /SHOK   * 6*                             *15*   /Q2         
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /HSYNC   * 7*                             *14*   /Q3         
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /SLOAD   * 8*                             *13*   /DAC        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /VID   * 9*                             *12*   /SLEN       
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - HORIZONTAL ZOOM CONTROLLER                                                     
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 1 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 ---X ---- ---- ---- ---- ---- ---- -X-- VID*/A11                        
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 X--- ---- ---- ---- X--- X--- ---- ---- HZ0*/SHOK*/HSYNC                
+17 X--- ---- ---- ---- -X-- ---- ---- ---X HZ0*SLEN*SHOK                   
+18 ---- ---- --X- ---- -X-- ---- ---- --X- /Q0*/SLEN*SHOK                  
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- X--- ---- ---- X--- X--- ---- ---- HZ1*/SHOK*/HSYNC                
+25 ---- X--- ---- ---- -X-- ---- ---- ---X HZ1*SLEN*SHOK                   
+26 ---- ---- ---X ---X -X-- ---- ---- --X- Q0*Q1*/SLEN*SHOK                
+27 ---- ---- --X- --X- -X-- ---- ---- --X- /Q0*/Q1*/SLEN*SHOK              
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 ---- ---- X--- ---- X--- X--- ---- ---- HZ2*/SHOK*/HSYNC                
+33 ---- ---- X--- ---- -X-- ---- ---- ---X HZ2*SLEN*SHOK                   
+34 ---- ---- --X- --X- -XX- ---- ---- --X- /Q0*/Q1*/Q2*/SLEN*SHOK          
+35 ---- ---- ---X ---X -X-X ---- ---- --X- Q0*Q1*Q2*/SLEN*SHOK             
+36 ---- ---- --X- ---X -X-X ---- ---- --X- /Q0*Q1*Q2*/SLEN*SHOK            
+37 ---- ---- ---X --X- -X-X ---- ---- --X- Q0*/Q1*Q2*/SLEN*SHOK            
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 ---- ---- ---- X--- X--- X--- ---- ---- HZ3*/SHOK*/HSYNC                
+41 ---- ---- ---- X--- -X-- ---- ---- ---X HZ3*SLEN*SHOK                   
+42 ---- ---- ---X ---- -X-- ---X ---- --X- Q3*Q0*/SLEN*SHOK                
+43 ---- ---- ---- ---X -X-- ---X ---- --X- Q3*Q1*/SLEN*SHOK                
+44 ---- ---- ---- ---- -X-X ---X ---- --X- Q3*Q2*/SLEN*SHOK                
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 --X- ---- ---- ---- ---- ---- ---- -X-- VID*A11                         
+50 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 ---- ---- ---- ---- ---- ---- ---- ----                                 
+57 ---- ---- --X- --X- -XX- --X- ---- ---- /Q0*/Q1*/Q2*/Q3*SHOK            
+58 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  692
+
+SECURITY FUSE XX
+
+

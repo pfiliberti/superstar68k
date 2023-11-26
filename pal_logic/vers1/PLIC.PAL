@@ -1,0 +1,29 @@
+PAL16R4                                         PAL DESIGN SPECIFICATION
+PLIC                                              PETER FILIBERTI 7/1/87
+PETERS LOGIC INTERFACE CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+CLK /NOSH /P7 /SLOAD /SLEN PCLK /DAC NC NC GND
+/OE DCLK NC /RSEL NC NC NC NC NC VCC
+
+RSEL    := RSEL * /P7 * /SLOAD * /NOSH          ;HOLD
+        +  RSEL * P7 * SLOAD  * /NOSH           ;HOLD
+        +  /P7 * SLOAD * /NOSH                  ;LOAD 0
+        +  P7 * /SLOAD * /SLEN                  ;WAIT FOR /SLEN LOW
+
+IF (VCC) /DCLK = /PCLK
+               + DAC
+
+FUNCTION TABLE
+
+/OE CLK /NOSH /P7 /SLOAD /SLEN /RSEL  PCLK /DAC DCLK
+-----------------------------------------------------
+ L   C    L    X    X      L     H     L     H   L       ;RESET /RSEL = 1
+ L   C    H    L    L      L     H     H     H   H       ;HOLD STATE
+ L   C    H    H    H      L     H     L     L   L       ;HOLD STATE
+ L   C    H    H    L      L     L     H     L   L       ;SEL REG 1 /RSEL = 0
+ L   C    H    L    L      L     L     X     X   X       ;HOLD STATE
+ L   C    H    H    H      L     L     X     X   X       ;HOLD STATE
+ L   C    H    L    H      H     L     X     X   X       ;HOLD STATE
+ L   C    H    L    H      L     H     X     X   X       ;SEL REG 0 /RSEL = 1
+-------------------------------
+

@@ -1,0 +1,38 @@
+PAL16R4                                         PAL DESIGN SPECIFICATION
+GMIC                                              PETER FILIBERTI 7/1/87
+GRAPHIC MEMORY INTERFACE CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+CLK /MCYC MRD /AS /DRAW /HSYNC /RST /SLEN /SLOK GND
+OE /RAS /CAS /Q0 /Q1 /SLOAD /RE /WE /ATR VCC
+
+Q0    := /Q0 * /AS * /RST
+
+Q1    := /Q0 * Q1 * /AS * /RST
+      +  Q0 * /Q1 * /AS * /RST
+
+RE    := /HSYNC * MRD * /RST
+
+SLOAD := Q0 * /Q1 * /HSYNC * MRD * /DRAW * SLOK * /RST
+
+IF (VCC) RAS = /Q0 * /Q1 * /AS * /RST
+             + Q0 * /Q1 * /RST
+             + /Q0 * Q1 * /RST
+
+IF (VCC) CAS = /MCYC * Q0 * /Q1 * /HSYNC * /RST
+             + /MCYC * /Q0 * Q1 * /HSYNC * /RST
+
+IF (VCC) WE = CAS * /HSYNC * /MRD * /RST
+
+IF (VCC) ATR = /Q0 * HSYNC * /RST
+
+
+
+DESCRIPTION
+
+This configuration attaches to the HD63484 Advanced CRT Controller
+and produces the proper RAS CAS RE and WE signals for interfacing
+to dynamic Ram. It also prodices an SLOAD signal which is fed to the
+video shift registers to load data into them.
+Warning! Propagation Delays Are used to Control timing! See Chart!
+NOTE SLEN IS NOT NEEDED
+

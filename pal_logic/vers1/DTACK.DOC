@@ -1,0 +1,215 @@
+
+
+PAL16R4                                           PAL DESIGN SPECIFICATION     
+DTACK                                             PETER FILIBERTI 11/5/87      
+68000 CPU DTACK GENERATOR                                                      
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK /RAM /VID0 /VID1 /VID2 /AS /LDS /UDS DAC GND 
+/OE /VDTA /DTA /VID /DACS /Q0 /Q1 /RAMH /RAML VCC 
+  
+  
+Q0    := /Q0 * AS 
+  
+Q1    := /Q0 * Q1 * AS 
+      +  Q0 * /Q1 * AS 
+  
+DACS  := /VID0 * /VID1 * /VID2               ;IF NOT VIDEO DISABLE DAC STROBE 
+       + /DAC                                ;IF NOT DAC ACCESS DISABLE 
+       + /AS                                 ;IF /AS HIGH DISBLE 
+       + Q0                                  ;IF Q0 HIGH DIABLE 
+       + Q1                                  ;IF Q1 HIGH DISABLE 
+  
+VID   := VID0 
+      +  VID1 
+      +  VID2 
+  
+IF (VCC) RAML = RAM * LDS * AS                                  ;RAM L SEL 
+  
+IF (VCC) RAMH = RAM * UDS * AS                                  ;RAM H SEL 
+  
+IF (VCC) DTA = Q0 * /Q1 * /VID * AS                             ;ROM & I/O 
+             + Q0 * /Q1 * /VID * RAML                           ;RAM 
+             + Q0 * /Q1 * /VID * RAMH                           ;RAM 
+             + Q0 * /Q1 * VID * DAC * AS                        ;VIDEO DAC 
+             + VID * VDTA * /DAC * AS                           ;VIDEO PROC 
+             + DTA * AS                                         ;HOLD FUNCTION 
+  
+  
+FUNCTION TABLE 
+  
+/OE CLK /RAM /VID0 /VID1 /VID2 /VID /AS /LDS /UDS DAC /VDTA Q1 Q0 /DTA /RAMH 
+/RAML /DACS 
+;          - - -                                       - - 
+;        - V V V -                                     R R 
+;        R I I I V                                     A A 
+;        A D D D I                          STATE      M M 
+;/OE CLK M 0 1 2 D /AS /LDS /UDS  DAC /VDTA Q1 Q0 /DTA H L  /DACS      COMMENT 
+---------------------------------------------------------------------------- 
+  L   C  H H H H H  H    X    X    L    H   L  L   H   H H    L  STATE RESET 
+  L   C  H H H H H  L    X    X    H    H   L  H   L   H H    L  ROM /IO FETCH 
+  L   C  H H H H H  L    X    X    L    H   H  L   L   H H    L  DTACK STATE 
+  L   C  H H H H H  L    X    X    H    H   H  H   L   H H    L  HOLD FUNCTION 
+  L   C  H H H H H  H    X    X    L    H   L  L   H   H H    L  END FETCH 
+  L   C  H H H H H  H    X    X    H    H   L  L   H   H H    L  STATE RESET 
+  L   C  L H H H H  L    L    H    L    H   L  H   L   H L    L  RAM FETCH 
+  L   C  L H H H H  L    H    L    H    H   H  L   L   L H    L  DTACK STATE 
+  L   C  L H H H H  L    L    H    L    H   H  H   L   H L    L  HOLD FUNCTION 
+  L   C  H H H H H  H    X    X    H    H   L  L   H   H H    L  END FETCH 
+  L   C  H H H H H  H    X    X    L    H   L  L   H   H H    L  STATE RESET 
+  L   C  H L H H L  L    X    X    H    H   L  H   L   H H    H  VIDEO DAC I/O 
+  L   C  H H L H L  L    X    X    H    H   H  L   L   H H    L  DTACK STATE 
+  L   C  H H H L L  L    X    X    H    H   H  H   L   H H    L  HOLD FUNCTION 
+  L   C  H H H L L  H    X    X    H    H   L  L   H   H H    L  END FETCH 
+  L   C  H H H H H  H    X    X    L    H   L  L   H   H H    L  STATE RESET 
+  L   C  H L H H L  L    X    X    L    H   L  H   H   H H    L  VIDEO FETCH 
+  L   C  H H L H L  L    X    X    L    H   H  L   H   H H    L  WAIT STATE 
+  L   C  H H H L L  L    X    X    L    H   H  H   H   H H    L  WAIT STATE 
+  L   C  H H H L L  L    X    X    L    H   L  L   H   H H    L  WAIT STATE 
+  L   C  H H H L L  L    X    X    L    L   L  H   L   H H    L  DTACK STATE 
+  L   C  H H H H H  H    X    X    L    H   L  L   H   H H    L  END FETCH 
+---------------------------------------------------------------------------- 
+  
+  
+DESCRIPTION 
+  
+THIS PAL GENERATES THE DTACK SIGNAL FOR THE 68000. IF THE /RAM INPUT AND 
+/VIDX INPUTS ARE HI THEN A ROM ACCESS IS ASSUMED AND A DTACK IS GENERATED 
+AFTER 1 CLOCK COUNTS OR 140 NS AFTER AS FALLS. IF ANY /VIDX IS LOW THEN A 
+VIDEO ACCESS IS ASSUMED AND DTACK GOES LOW WHEN THE /VDTA INPUT GOES LOW. 
+IF /RAM IS LOW, THEN A RAM ACCESS IS ASSUMED AND THE DTACK IS GENERATED 
+1 CLOCK COUNT LATER OR 1400 NS LATER. THE /DACS OUTPUT IS LOW WHEN /AS IS HI 
+AND GOES HI ONE CLOCK CYCLE AFTER /AS GOES LOW. 
+
+
+68000 CPU DTACK GENERATOR                                                      
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+        /RAM   * 2*                             *19*   /RAML       
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /VID0   * 3*                             *18*   /RAMH       
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /VID1   * 4*                             *17*   /Q1         
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /VID2   * 5*                             *16*   /Q0         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         /AS   * 6*                             *15*   /DACS       
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /LDS   * 7*                             *14*   /VID        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /UDS   * 8*                             *13*   /DTA        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         DAC   * 9*                             *12*   /VDTA       
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - 68000 CPU DTACK GENERATOR                                                      
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 1 -X-- ---- ---- ---- -X-- -X-- ---- ---- RAM*LDS*AS                      
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 -X-- ---- ---- ---- -X-- ---- -X-- ---- RAM*UDS*AS                      
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 ---- ---- ---X --X- -X-- ---- ---- ---- /Q0*Q1*AS                       
+17 ---- ---- --X- ---X -X-- ---- ---- ---- Q0*/Q1*AS                       
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- ---- ---- --X- -X-- ---- ---- ---- /Q0*AS                          
+25 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 ---- X--- X--- X--- ---- ---- ---- ---- /VID0*/VID1*/VID2               
+33 ---- ---- ---- ---- ---- ---- ---- -X-- /DAC                            
+34 ---- ---- ---- ---- X--- ---- ---- ---- /AS                             
+35 ---- ---- ---- ---X ---- ---- ---- ---- Q0                              
+36 ---- ---- ---X ---- ---- ---- ---- ---- Q1                              
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 ---- -X-- ---- ---- ---- ---- ---- ---- VID0                            
+41 ---- ---- -X-- ---- ---- ---- ---- ---- VID1                            
+42 ---- ---- ---- -X-- ---- ---- ---- ---- VID2                            
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 ---- ---- --X- ---X -X-- --X- ---- ---- Q0*/Q1*/VID*AS                  
+50 ---X ---- --X- ---X ---- --X- ---- ---- Q0*/Q1*/VID*RAML                
+51 ---- ---X --X- ---X ---- --X- ---- ---- Q0*/Q1*/VID*RAMH                
+52 ---- ---- --X- ---X -X-- ---X ---- X--- Q0*/Q1*VID*DAC*AS               
+53 ---- ---- ---- ---- -X-- ---X ---- -X-X VID*VDTA*/DAC*AS                
+54 ---- ---- ---- ---- -X-- ---- ---X ---- DTA*AS                          
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+57 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+58 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  657
+
+SECURITY FUSE XX
+
+                                                                                        

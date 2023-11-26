@@ -1,0 +1,56 @@
+PAL16R4                                         PAL DESIGN SPECIFICATION
+BUFSEL                                           PETER FILIBERTI 11/5/87
+BUFFER SELECTION CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+CLK A0 A1 /RAS /DRAW MCYC NC NC NC GND
+/OE /BF3 /BF2 NC NC /LA1 /LA0 /BF1 /BF0 VCC
+
+
+LA0     := /A0
+
+LA1     := /A1
+
+
+IF (VCC) BF0 = DRAW * RAS * LA0 * LA1 * MCYC    ;ON WHEN A0=0 & A1=0
+
+IF (VCC) BF1 = DRAW * RAS * /LA0 * LA1 * MCYC   ;ON WHEN A0=1 & A1=0
+
+IF (VCC) BF2 = DRAW * RAS * LA0 * /LA1 * MCYC   ;ON WHEN A0=0 & A1=1
+
+IF (VCC) BF3 = DRAW * RAS * /LA0 * /LA1 * MCYC  ;ON WHEN A0=1 & A1=1
+
+FUNCTION TABLE
+
+
+/OE CLK A0 A1 /RAS /DRAW MCYC /LA0 /LA1 /BF0 /BF1 /BF2 /BF3
+;
+;
+;
+;/OE CLK A0 A1 /RAS /DRAW MCYC /LA0 /LA1 /BF0 /BF1 /BF2 /BF3     COMMENT
+----------------------------------------------------------------------------
+  L   C  L  L   H     H    L    L     L   H     H    H    H     DISPLAY FETCH
+  L   C  H  H   L     H    H    H     H   H     H    H    H     DISPLAY FETCH
+  L   C  L  L   H     L    L    L     L   H     H    H    H     DRAW ACCESS
+  L   C  L  L   L     L    H    L     L   L     H    H    H     DRAW BUF0
+  L   C  L  L   L     L    L    L     L   H     H    H    H     DRAW BUF0
+  L   C  L  L   H     H    H    L     L   H     H    H    H     DISPLAY FETCH
+  L   C  H  L   H     L    L    H     L   H     H    H    H     DRAW ACCESS
+  L   C  H  L   L     L    H    H     L   H     L    H    H     DRAW BUF1
+  L   C  H  L   L     L    L    H     L   H     H    H    H     DRAW BUF1
+  L   C  H  L   H     H    H    H     L   H     H    H    H     DISPLAY FETCH
+  L   C  L  H   H     L    L    L     H   H     H    H    H     DRAW ACCESS
+  L   C  L  H   L     L    H    L     H   H     H    L    H     DRAW BUF2
+  L   C  L  H   L     L    L    L     H   H     H    H    H     DRAW BUF2
+  L   C  L  H   H     H    H    L     H   H     H    H    H     DISPLAY FETCH
+  L   C  H  H   H     L    L    H     H   H     H    H    H     DRAW ACCESS
+  L   C  H  H   L     L    H    H     H   H     H    H    L     DRAW BUF3
+  L   C  H  H   L     L    L    H     H   H     H    H    H     DRAW BUF3
+  L   C  H  H   H     H    H    H     H   H     H    H    H     DISPLAY FETCH
+----------------------------------------------------------------------------
+
+
+DESCRIPTION
+THIS PAL ENABLES THE PROPER DATA BUFFERS AT THE PROPER TIME. IT ALSO LATCHES
+A0 & A1 USING THE ADDRESS STROBE FOR USE BY THE SCROLLER PAL. THE BUFFERS ARE
+ENABLES UPON THE FALLING EDGE OF /RAS AND STAY ENABLED UNTIL /DRAW GOES HI.
+

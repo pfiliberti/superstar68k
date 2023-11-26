@@ -1,0 +1,69 @@
+PAL16R4                                          PAL DESIGN SPECIFICATION
+ZOOMER                                            PETER FILIBERTI 11/5/87
+HORIZONTAL ZOOM CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+/CLK HZ0 HZ1 HZ2 HZ3 /SHOK /HSYNC /SLOAD /VID GND
+/OE /SLEN /DAC /Q3 /Q2 /Q1 /Q0 /ACRT A11 VCC
+
+Q0     := HZ0 * /SHOK * /HSYNC                  ;FIRST LOAD
+        + HZ0 * SLEN * SHOK                     ;CONSECUTIVE LOADS
+        + /Q0 * /SLEN * SHOK                    ;TOGGLE DOWN
+
+Q1     := HZ1 * /SHOK * /HSYNC                  ;FIRST LOAD
+        + HZ1 * SLEN * SHOK                     ;CONSECUTIVE LOADS
+        + Q0 * Q1 * /SLEN * SHOK                ;TOGGLE
+        + /Q0 * /Q1 * /SLEN * SHOK              ;TOGGLE
+
+Q2     := HZ2 * /SHOK * /HSYNC                  ;FIRST LOAD
+        + HZ2 * SLEN * SHOK                     ;CONSECUTIVE LOADS
+        + /Q0 * /Q1 * /Q2 * /SLEN * SHOK        ;TOGGLE
+        + Q0 * Q1 * Q2 * /SLEN * SHOK           ;TOGGLE
+        + /Q0 * Q1 * Q2 * /SLEN * SHOK          ;TOGGLE
+        + Q0 * /Q1 * Q2 * /SLEN * SHOK          ;TOGGLE
+
+Q3     := HZ3 * /SHOK * /HSYNC                  ;FIRST LOAD
+        + HZ3 * SLEN * SHOK                     ;CONSECUTIVE LOADS
+        + Q3 * Q0 * /SLEN * SHOK                ;TOGGLE
+        + Q3 * Q1 * /SLEN * SHOK                ;TOGGLE
+        + Q3 * Q2 * /SLEN * SHOK                ;TOGGLE
+
+IF (VCC) SLEN = /Q0 * /Q1 * /Q2 * /Q3 * SHOK
+
+IF (VCC) DAC  = VID * A11
+
+IF (VCC) ACRT = VID * /A11
+
+FUNCTION TABLE
+
+CLK /OE /VID A11 /DAC /ACRT /HSYNC /SHOK HZ3 HZ2 HZ1 HZ0 Q3 Q2 Q1 Q0 /SLEN
+
+;                                         H H H H
+;                                         Z Z Z Z
+;CLK /OE /VID A11 /DAC /ACRT /HSYNC /SHOK 3 2 1 0 Q3 Q2 Q1 Q0 /SLEN
+---------------------------------------------------------------------------
+  C   L   H   X   H     H      X      X   X X X X  X  X  X  X   X
+  C   L   L   H   L     H      X      X   X X X X  X  X  X  X   X
+  C   L   L   L   H     L      X      X   X X X X  X  X  X  X   X
+  C   L   X   X   X     X      H      H   H H H H  H  H  H  H   H  HBLANK LOAD
+  C   L   X   X   X     X      H      L   H H H H  H  H  H  L   H  COUNT DOWN
+  C   L   X   X   X     X      H      L   H H H H  H  H  L  H   H
+  C   L   X   X   X     X      H      L   H H H H  H  H  L  L   H
+  C   L   X   X   X     X      H      L   H H H H  H  L  H  H   H
+  C   L   X   X   X     X      H      L   H H H H  H  L  H  L   H
+  C   L   X   X   X     X      H      L   H H H H  H  L  L  H   H
+  C   L   X   X   X     X      H      L   H H H H  H  L  L  L   H
+  C   L   X   X   X     X      H      L   H H H H  L  H  H  H   H
+  C   L   X   X   X     X      H      L   H H H H  L  H  H  L   H
+  C   L   X   X   X     X      H      L   H H H H  L  H  L  H   H
+  C   L   X   X   X     X      H      L   H H H H  L  H  L  L   H
+  C   L   X   X   X     X      H      L   H H H H  L  L  H  H   H
+  C   L   X   X   X     X      H      L   H H H H  L  L  H  L   H
+  C   L   X   X   X     X      H      L   H H H H  L  L  L  H   H
+---------------------------------------------------------------------------
+
+DESCRIPTION
+THIS IC DECODES THE /VID & A11 LINES TO PRODUCE /ACRTC AND /DAC WHICH ENABLE
+THE VIDEO CONTROLLER OR DAC WHEN ACCESSED. IT ALSO LOADS THE HORIZONTAL
+ZOOM COUNT INTO A COUNTER AND DELAYS PIXELS BY THAT COUNT USING THE /SLEN
+LINE.
+

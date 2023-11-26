@@ -1,0 +1,64 @@
+PAL16R4                                         PAL DESIGN SPECIFICATION
+IRQC                                             PETER FILIBERTI 11/5/87
+INTERRUPT AUTOVECTOR CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+CLK FC0 FC1 FC2 /VIRQ0 /VIRQ1 /VIRQ2 /TIRQ /VSYNC GND
+/OE NC /HSTATE /LASTH /IPL2 /IPL1 /IPL0 VPA ADE VCC
+
+
+IPL0    := VIRQ0 * /VIRQ1 * /TIRQ
+        +  VIRQ2 * /TIRQ
+        +  HSTATE
+
+IPL1    := VIRQ1 * /TIRQ * /HSTATE
+        +  VIRQ2 * /TIRQ * /HSTATE
+
+IPL2    := TIRQ
+        +  HSTATE
+
+LASTH   := VSYNC * /VPA
+        +  VSYNC * LASTH
+
+IF (VCC) HSTATE = VSYNC * /LASTH
+
+IF (VCC) /ADE = FC0 * FC1 * FC2
+
+IF (VCC) /VPA = /ADE
+
+
+FUNCTION TABLE
+
+/OE CLK FC0 FC1 FC2 /VIRQ0 /VIRQ1 /VIRQ2 /TIRQ /VSYNC /IPL0 /IPL1 /IPL2 VPA
+ADE /LASTH /HSTATE
+;             - - -                                         _ _
+;             V V V                                         L H
+;             I I I                                         A S
+;    C F F F  R R R                                         S T
+;    L C C C  Q Q Q                                         T A
+;/OE K 0 1 2  0 1 2 /TIRQ /VSYNC /IPL0 /IPL1 /IPL2 VPA ADE  H T    COMMENTS
+----------------------------------------------------------------------------
+  L  C L L L  H H H   H     H      H     H     H    H   H   H H   NO IRQ STATE
+  L  C H L L  L L L   L     L      L     H     L    H   H   H L   VSYNC IRQ 5
+  L  C L H L  L L L   L     H      H     H     L    H   H   H H   TIRQ  IRQ 4
+  L  C H H L  L L L   H     H      L     L     H    H   H   H H   VIRQ2 IRQ 3
+  L  C L L H  L L H   H     H      H     L     H    H   H   H H   VIRQ1 IRQ 2
+  L  C H L H  L H H   H     H      L     H     H    H   H   H H   VIRQ0 IRQ 1
+  L  C L H H  X X X   X     X      X     X     X    H   H   X X   FC0-FC2 TST
+  L  C H H H  X X X   X     X      X     X     X    L   L   X X   FC0-FC2 TST
+  L  C H H H  X X X   X     H      X     X     X    L   L   H H   VSYNC RESET
+  L  C L L L  X X X   X     L      X     X     X    H   H   H L   VSYNC DETCT
+  L  C H H H  X X X   X     L      X     X     X    L   L   L H   VSYNC HOLD
+  L  C L L L  X X X   X     L      X     X     X    H   H   L H   VSYNC HOLD
+----------------------------------------------------------------------------
+
+
+DESCRIPTION
+
+THIS PAL GENERATES THE PROPER IPL0-2 PATTERN FOR A CERTAIN IRQ OCCURENCE. IT
+TAKES INTO ACCOUNT IRQ PRIORITY WHERE PRIORITY IS IN THIS ORDER: VSYNC, TIRQ,
+VIRQ2, VIRQ1, VIRQ0. IT ALSO GENERATES ADE WHICH DISABLES ADDRESS DECODING
+DURING AN IRQ FETCH AND VPA WHICH CAUSES THE 68000 TO EXECUTE AN AUTOVECTOR
+SEQUENCE. THE PURPOSE OF THE LASTH AND HSTATE LOGIC IS TO CREATE ONLY ONE
+INTERRUPT FOR THE VSYNC INPUT ON THE LOW GOING EDGE BECAUSE VSYNC STAYS LOW
+A LONG TIME WE DON'T WANT CONSTANT INTERRUPTS.
+

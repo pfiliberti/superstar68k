@@ -1,0 +1,199 @@
+
+
+PAL16R4 					PAL DESIGN SPECIFICATION                                          
+IRQC						 PETER FILIBERTI 11/5/87                                             
+INTERRUPT AUTOVECTOR CONTROLLER                                                
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK FC0 FC1 FC2 /VIRQ0 /VIRQ1 /VIRQ2 /CUD1 /VSYNC GND 
+/OE NC /HSTATE /LASTH /IPL2 /IPL1 /IPL0 VPA ADE VCC 
+  
+  
+IPL0 := VIRQ0 * /VIRQ1 * /CUD1 
+ +  VIRQ2 * /CUD1 
+ +  HSTATE 
+  
+IPL1 := VIRQ1 * /CUD1 * /HSTATE 
+ +  VIRQ2 * /CUD1 * /HSTATE 
+  
+IPL2 := CUD1 
+ +  HSTATE 
+  
+LASTH := VSYNC * /VPA 
+ +  VSYNC * LASTH 
+  
+IF (VCC) HSTATE = VSYNC * /LASTH 
+  
+IF (VCC) /ADE = FC0 * FC1 * FC2 
+  
+IF (VCC) /VPA = /ADE 
+  
+  
+FUNCTION TABLE 
+  
+/OE CLK FC0 FC1 FC2 /VIRQ0 /VIRQ1 /VIRQ2 /CUD1 /VSYNC /IPL0 /IPL1 /IPL2 VPA 
+ADE /LASTH /HSTATE 
+;       - - -         ? ? 
+;       V V V         L H 
+;       I I I         A S 
+;    C F F F  R R R         S T 
+;    L C C C  Q Q Q         T A 
+;/OE K 0 1 2  0 1 2 /CUD1 /VSYNC /IPL0 /IPL1 /IPL2 VPA ADE  H T    COMMENTS 
+---------------------------------------------------------------------------- 
+  L  C L L L  H H H   H     H    H  H     H    H H   H H   NO IRQ STATE 
+  L  C H L L  L L L   L     L    L  H     L    H H   H L   VSYNC IRQ 5 
+  L  C L H L  L L L   L     H    H  H     L    H H   H H   CUD1 IRQ 4 
+  L  C H H L  L L L   H     H    L  L     H    H H   H H   VIRQ2 IRQ 3 
+  L  C L L H  L L H   H     H    H  L     H    H H   H H   VIRQ1 IRQ 2 
+  L  C H L H  L H H   H     H    L  H     H    H H   H H   VIRQ0 IRQ 1 
+  L  C L H H  X X X   X     X    X  X     X    H H   X X   FC0-FC2 TST 
+  L  C H H H  X X X   X     X    X  X     X    L L   X X   FC0-FC2 TST 
+  L  C H H H  X X X   X     H    X  X     X    L L   H H   VSYNC RESET 
+  L  C L L L  X X X   X     L    X  X     X    H H   H L   VSYNC DETCT 
+  L  C H H H  X X X   X     L    X  X     X    L L   L H   VSYNC HOLD 
+  L  C L L L  X X X   X     L    X  X     X    H H   L H   VSYNC HOLD 
+---------------------------------------------------------------------------- 
+  
+  
+DESCRIPTION 
+  
+THIS PAL GENERATES THE PROPER IPL0-2 PATTERN FOR A CERTAIN IRQ OCCURENCE. IT 
+TAKES INTO ACCOUNT IRQ PRIORITY WHERE PRIORITY IS IN THIS ORDER: VSYNC, CUD1, 
+VIRQ2, VIRQ1, VIRQ0. IT ALSO GENERATES ADE WHICH DISABLES ADDRESS DECODING 
+DURING AN IRQ FETCH AND VPA WHICH CAUSES THE 68000 TO EXECUTE AN AUTOVECTOR 
+SEQUENCE. THE PURPOSE OF THE LASTH AND HSTATE LOGIC IS TO CREATE ONLY ONE 
+INTERRUPT FOR THE VSYNC INPUT ON THE LOW GOING EDGE BECAUSE VSYNC STAYS LOW 
+A LONG TIME WE DON'T WANT CONSTANT INTERRUPTS. 
+
+
+INTERRUPT AUTOVECTOR CONTROLLER                                                
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+         FC0   * 2*                             *19*   ADE         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         FC1   * 3*                             *18*   VPA         
+               ****                             ****
+                  *                             *
+               ****                             ****
+         FC2   * 4*                             *17*   /IPL0       
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /VIRQ0   * 5*                             *16*   /IPL1       
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /VIRQ1   * 6*                             *15*   /IPL2       
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /VIRQ2   * 7*                             *14*   /LASTH      
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /CUD1   * 8*                             *13*   /HSTATE     
+               ****                             ****
+                  *                             *
+               ****                             ****
+      /VSYNC   * 9*                             *12*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - INTERRUPT AUTOVECTOR CONTROLLER                                                
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 1 X--- X--- X--- ---- ---- ---- ---- ---- FC0*FC1*FC2                     
+ 2 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 ---X ---- ---- ---- ---- ---- ---- ---- /ADE                            
+10 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 ---- ---- ---- -X-- X--- ---- X--- ---- VIRQ0*/VIRQ1*/CUD1              
+17 ---- ---- ---- ---- ---- -X-- X--- ---- VIRQ2*/CUD1                     
+18 ---- ---- ---- ---- ---- ---- ---X ---- HSTATE                          
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- ---- ---- ---- -X-- ---- X-X- ---- VIRQ1*/CUD1*/HSTATE             
+25 ---- ---- ---- ---- ---- -X-- X-X- ---- VIRQ2*/CUD1*/HSTATE             
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 ---- ---- ---- ---- ---- ---- -X-- ---- CUD1                            
+33 ---- ---- ---- ---- ---- ---- ---X ---- HSTATE                          
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 ---- ---X ---- ---- ---- ---- ---- -X-- VSYNC*/VPA                      
+41 ---- ---- ---- ---- ---- ---X ---- -X-- VSYNC*LASTH                     
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 ---- ---- ---- ---- ---- --X- ---- -X-- VSYNC*/LASTH                    
+50 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+57 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+58 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  456
+
+SECURITY FUSE XX
+
+               

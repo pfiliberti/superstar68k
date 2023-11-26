@@ -1,0 +1,397 @@
+
+
+PAL16R4                                         PAL DESIGN SPECIFICATION       
+BUFSEL                                           PETER FILIBERTI 11/5/87       
+BUFFER SELECTION CONTROLLER                                                    
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK A0 A1 /RAS /DRAW NC NC NC NC GND 
+/OE /BF3 /BF2 NC NC /LA1 /LA0 /BF1 /BF0 VCC 
+  
+  
+LA0     := /A0 
+  
+LA1     := /A1 
+  
+  
+IF (VCC) BF0 = DRAW * RAS * LA0 * LA1           ;ON WHEN A0=0 & A1=0 
+             + DRAW * BF0                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF1 = DRAW * RAS * /LA0 * LA1          ;ON WHEN A0=1 & A1=0 
+             + DRAW * BF1                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF2 = DRAW * RAS * LA0 * /LA1          ;ON WHEN A0=0 & A1=1 
+             + DRAW * BF2                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF3 = DRAW * RAS * /LA0 * /LA1         ;ON WHEN A0=1 & A1=1 
+             + DRAW * BF3                       ;HOLD FUNCTION 
+  
+  
+FUNCTION TABLE 
+  
+  
+/OE CLK A0 A1 /RAS /DRAW /LA0 /LA1 /BF0 /BF1 /BF2 /BF3 
+; 
+; 
+; 
+;/OE CLK A0 A1 /RAS /DRAW /LA0 /LA1 /BF0 /BF1 /BF2 /BF3     COMMENT 
+---------------------------------------------------------------------------- 
+  L   C  L  L   H     H    L     L   H     H    H    H     DISPLAY FETCH 
+  L   C  H  H   L     H    H     H   H     H    H    H     DISPLAY FETCH 
+  L   C  L  L   H     L    L     L   H     H    H    H     DRAW ACCESS 
+  L   C  L  L   L     L    L     L   L     H    H    H     DRAW BUF0 
+  L   C  L  L   H     L    L     L   L     H    H    H     DRAW BUF0 
+  L   C  L  L   H     H    L     L   H     H    H    H     DISPLAY FETCH 
+  L   C  H  L   H     L    H     L   H     H    H    H     DRAW ACCESS 
+  L   C  H  L   L     L    H     L   H     L    H    H     DRAW BUF1 
+  L   C  H  L   H     L    H     L   H     L    H    H     DRAW BUF1 
+  L   C  H  L   H     H    H     L   H     H    H    H     DISPLAY FETCH 
+  L   C  L  H   H     L    L     H   H     H    H    H     DRAW ACCESS 
+  L   C  L  H   L     L    L     H   H     H    L    H     DRAW BUF1 
+  L   C  L  H   H     L    L     H   H     H    L    H     DRAW BUF1 
+  L   C  L  H   H     H    L     H   H     H    H    H     DISPLAY FETCH 
+  L   C  H  H   H     L    H     H   H     H    H    H     DRAW ACCESS 
+  L   C  H  H   L     L    H     H   H     H    H    L     DRAW BUF1 
+  L   C  H  H   H     L    H     H   H     H    H    L     DRAW BUF1 
+  L   C  H  H   H     H    H     H   H     H    H    H     DISPLAY FETCH 
+---------------------------------------------------------------------------- 
+  
+  
+DESCRIPTION 
+THIS PAL ENABLES THE PROPER DATA BUFFERS AT THE PROPER TIME. IT ALSO LATCHES 
+A0 & A1 USING THE ADDRESS STROBE FOR USE BY THE SCROLLER PAL. THE BUFFERS ARE 
+ENABLES UPON THE FALLING EDGE OF /RAS AND STAY ENABLED UNTIL /DRAW GOES HI. 
+
+
+BUFFER SELECTION CONTROLLER                                                    
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+          A0   * 2*                             *19*   /BF0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          A1   * 3*                             *18*   /BF1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /RAS   * 4*                             *17*   /LA0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /DRAW   * 5*                             *16*   /LA1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 6*                             *15*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 7*                             *14*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 8*                             *13*   /BF2        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 9*                             *12*   /BF3        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - BUFFER SELECTION CONTROLLER                                                    
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 1 ---- ---- -X-X -X-X ---- ---- ---- ---- DRAW*RAS*LA0*LA1                
+ 2 ---X ---- ---- -X-- ---- ---- ---- ---- DRAW*BF0                        
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 ---- ---- -XX- -X-X ---- ---- ---- ---- DRAW*RAS*/LA0*LA1               
+10 ---- ---X ---- -X-- ---- ---- ---- ---- DRAW*BF1                        
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 -X-- ---- ---- ---- ---- ---- ---- ---- /A0                             
+17 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- -X-- ---- ---- ---- ---- ---- ---- /A1                             
+25 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+33 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+41 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 ---- ---- -X-X -XX- ---- ---- ---- ---- DRAW*RAS*LA0*/LA1               
+50 ---- ---- ---- -X-- ---- ---- ---X ---- DRAW*BF2                        
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 ---- ---- ---- ---- ---- ---- ---- ----                                 
+57 ---- ---- -XX- -XX- ---- ---- ---- ---- DRAW*RAS*/LA0*/LA1              
+58 ---- ---- ---- -X-- ---- ---- ---- ---X DRAW*BF3                        
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  422
+
+SECURITY FUSE XX
+
+
+
+PAL16R4                                         PAL DESIGN SPECIFICATION       
+BUFSEL                                           PETER FILIBERTI 11/5/87       
+BUFFER SELECTION CONTROLLER                                                    
+APPLIED COMPUTER TECHNOLOGY, INC.                                              
+CLK A0 A1 /RAS /DRAW NC NC NC NC GND 
+/OE /BF3 /BF2 NC NC /LA1 /LA0 /BF1 /BF0 VCC 
+  
+  
+LA0     := /A0 
+  
+LA1     := /A1 
+  
+  
+IF (VCC) BF0 = DRAW * RAS * LA0 * LA1           ;ON WHEN A0=0 & A1=0 
+             + DRAW * BF0                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF1 = DRAW * RAS * /LA0 * LA1          ;ON WHEN A0=1 & A1=0 
+             + DRAW * BF1                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF2 = DRAW * RAS * LA0 * /LA1          ;ON WHEN A0=0 & A1=1 
+             + DRAW * BF2                       ;HOLD FUNCTION 
+  
+  
+IF (VCC) BF3 = DRAW * RAS * /LA0 * /LA1         ;ON WHEN A0=1 & A1=1 
+             + DRAW * BF3                       ;HOLD FUNCTION 
+  
+  
+FUNCTION TABLE 
+  
+  
+/OE CLK A0 A1 /RAS /DRAW /LA0 /LA1 /BF0 /BF1 /BF2 /BF3 
+; 
+; 
+; 
+;/OE CLK A0 A1 /RAS /DRAW /LA0 /LA1 /BF0 /BF1 /BF2 /BF3     COMMENT 
+---------------------------------------------------------------------------- 
+  L   C  L  L   H     H    L     L   H     H    H    H     DISPLAY FETCH 
+  L   C  H  H   L     H    H     H   H     H    H    H     DISPLAY FETCH 
+  L   C  L  L   H     L    L     L   H     H    H    H     DRAW ACCESS 
+  L   C  L  L   L     L    L     L   L     H    H    H     DRAW BUF0 
+  L   C  L  L   H     L    L     L   L     H    H    H     DRAW BUF0 
+  L   C  L  L   H     H    L     L   H     H    H    H     DISPLAY FETCH 
+  L   C  H  L   H     L    H     L   H     H    H    H     DRAW ACCESS 
+  L   C  H  L   L     L    H     L   H     L    H    H     DRAW BUF1 
+  L   C  H  L   H     L    H     L   H     L    H    H     DRAW BUF1 
+  L   C  H  L   H     H    H     L   H     H    H    H     DISPLAY FETCH 
+  L   C  L  H   H     L    L     H   H     H    H    H     DRAW ACCESS 
+  L   C  L  H   L     L    L     H   H     H    L    H     DRAW BUF1 
+  L   C  L  H   H     L    L     H   H     H    L    H     DRAW BUF1 
+  L   C  L  H   H     H    L     H   H     H    H    H     DISPLAY FETCH 
+  L   C  H  H   H     L    H     H   H     H    H    H     DRAW ACCESS 
+  L   C  H  H   L     L    H     H   H     H    H    L     DRAW BUF1 
+  L   C  H  H   H     L    H     H   H     H    H    L     DRAW BUF1 
+  L   C  H  H   H     H    H     H   H     H    H    H     DISPLAY FETCH 
+---------------------------------------------------------------------------- 
+  
+  
+DESCRIPTION 
+THIS PAL ENABLES THE PROPER DATA BUFFERS AT THE PROPER TIME. IT ALSO LATCHES 
+A0 & A1 USING THE ADDRESS STROBE FOR USE BY THE SCROLLER PAL. THE BUFFERS ARE 
+ENABLES UPON THE FALLING EDGE OF /RAS AND STAY ENABLED UNTIL /DRAW GOES HI. 
+
+
+BUFFER SELECTION CONTROLLER                                                    
+
+                  **************   **************
+                  *             * *             *
+               ****                             ****
+         CLK   * 1*            P A L            *20*   VCC         
+               ****                             ****
+                  *           1 6 R4            *
+               ****                             ****
+          A0   * 2*                             *19*   /BF0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          A1   * 3*                             *18*   /BF1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+        /RAS   * 4*                             *17*   /LA0        
+               ****                             ****
+                  *                             *
+               ****                             ****
+       /DRAW   * 5*                             *16*   /LA1        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 6*                             *15*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 7*                             *14*   NC          
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 8*                             *13*   /BF2        
+               ****                             ****
+                  *                             *
+               ****                             ****
+          NC   * 9*                             *12*   /BF3        
+               ****                             ****
+                  *                             *
+               ****                             ****
+         GND   *10*                             *11*   /OE         
+               ****                             ****
+                  *                             *
+                  *******************************
+
+
+PAL20 V1.7F - PAL16R4  - BUFFER SELECTION CONTROLLER                                                    
+
+               11 1111 1111 2222 2222 2233
+   0123 4567 8901 2345 6789 0123 4567 8901
+
+ 0 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 1 ---- ---- -X-X -X-X ---- ---- ---- ---- DRAW*RAS*LA0*LA1                
+ 2 ---X ---- ---- -X-- ---- ---- ---- ---- DRAW*BF0                        
+ 3 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 4 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 5 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 6 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+ 7 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+ 8 ---- ---- ---- ---- ---- ---- ---- ----                                 
+ 9 ---- ---- -XX- -X-X ---- ---- ---- ---- DRAW*RAS*/LA0*LA1               
+10 ---- ---X ---- -X-- ---- ---- ---- ---- DRAW*BF1                        
+11 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+12 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+13 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+14 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+15 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+16 -X-- ---- ---- ---- ---- ---- ---- ---- /A0                             
+17 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+18 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+19 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+20 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+21 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+22 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+23 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+24 ---- -X-- ---- ---- ---- ---- ---- ---- /A1                             
+25 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+26 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+27 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+28 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+29 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+30 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+31 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+32 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+33 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+34 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+35 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+36 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+37 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+38 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+39 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+40 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+41 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+42 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+43 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+44 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+45 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+46 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+47 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+48 ---- ---- ---- ---- ---- ---- ---- ----                                 
+49 ---- ---- -X-X -XX- ---- ---- ---- ---- DRAW*RAS*LA0*/LA1               
+50 ---- ---- ---- -X-- ---- ---- ---X ---- DRAW*BF2                        
+51 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+52 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+53 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+54 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+55 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+56 ---- ---- ---- ---- ---- ---- ---- ----                                 
+57 ---- ---- -XX- -XX- ---- ---- ---- ---- DRAW*RAS*/LA0*/LA1              
+58 ---- ---- ---- -X-- ---- ---- ---- ---X DRAW*BF3                        
+59 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+60 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+61 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+62 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+63 XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX                                 
+
+
+LEGEND:  X : FUSE NOT BLOWN (L,N,0)   - : FUSE BLOWN   (H,P,1)
+
+NUMBER OF FUSES BLOWN =  422
+
+SECURITY FUSE XX
+
+

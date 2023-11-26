@@ -1,0 +1,58 @@
+PAL16R4                                         PAL DESIGN SPECIFICATION
+SCROLLER                                         PETER FILIBERTI 11/5/87
+HORIZONTAL SMOOTH SCROLL CONTROLLER
+APPLIED COMPUTER TECHNOLOGY, INC.
+CLK HSD0 HSD1 HSD2 /HSYNC /NOSH /WE A0 A1 VCC
+/OE /WE3 /WE2 /SHOK /Q2 /Q1 /Q0 /WE1 /WE0 GND
+
+
+Q0      := HSD0 * /HSYNC * NOSH                 ;LOAD
+        +  /Q0 * /NOSH                          ;COUNT
+
+Q1      := HSD1 * /HSYNC * NOSH                 ;LOAD
+        +  /Q0 * Q1 * /NOSH                     ;COUNT
+        +  Q0 * /Q1 * /NOSH                     ;COUNT
+
+Q2      := HSD2 * /HSYNC * NOSH                 ;LOAD
+        +  Q0 * Q1 * /Q2 * /NOSH                ;COUNT
+        +  /Q0 * /Q1 * Q2 * /NOSH               ;COUNT
+        +  Q0 * /Q1 * Q2 * /NOSH                ;COUNT
+        +  /Q0 * Q1 * Q2 * /NOSH                ;COUNT
+
+SHOK    := Q0 * Q1 * Q2 * /HSYNC * /NOSH
+        + SHOK * /HSYNC * /NOSH
+
+IF (VCC) WE0 = /A0 * /A1 * WE
+
+IF (VCC) WE1 = A0 * /A1 * WE
+
+IF (VCC) WE2 = /A0 * A1 * WE
+
+IF (VCC) WE3 = A0 * A1 * WE
+
+
+FUNCTION TABLE
+
+CLK /OE HSD0 HSD1 HSD2 Q2 Q1 Q0 /HSYNC /NOSH /WE A1 A0 /WE0 /WE1 /WE2 /WE3
+/SHOK
+
+;CK /OE HSD0 HSD1 HSD2 Q2 Q1 Q0 /HSYN /NOSH /WE A1 A0 /WE0 /WE1 /WE2 /WE3 /SHOK
+-------------------------------------------------------------------------------
+ C   L   X    X    X   X  X  X     X     X    X   X  X   X    X    X    X    X
+ C   L   X    X    X   X  X  X     X     X    H   X  X   H    H    H    H    X
+ C   L   X    X    X   X  X  X     X     X    L   L  L   L    H    H    H    X
+ C   L   X    X    X   X  X  X     X     X    L   L  H   H    L    H    H    X
+ C   L   X    X    X   X  X  X     X     X    L   H  L   H    H    L    H    X
+ C   L   X    X    X   X  X  X     X     X    L   H  H   H    H    H    L    X
+ C   L   X    X    X   X  X  X     L     L    X   X  X   X    X    X    X    H
+ C   L   L    L    L   L  L  L     H     L    X   X  X   X    X    X    X    H
+ C   L   L    L    L   L  L  H     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   L  H  L     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   L  H  H     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   H  L  L     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   H  L  H     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   H  H  L     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   H  H  H     H     H    X   X  X   X    X    X    X    H
+ C   L   L    L    L   L  L  L     H     H    X   X  X   X    X    X    X    L
+------------------------------------------------------------------------------
+
