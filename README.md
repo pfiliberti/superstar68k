@@ -34,6 +34,18 @@ exercise the hardware.
 2. 80000- 83FFF   8K WORDS OF RAM
 3. AX000- AX002   63484 VIDEO IC #1 PORTS
 4. AX400- AX7FF   VIDEO DAC #1 RAM LOCATIONS
+5. CX000- CX002   63484 VIDEO IC #2 PORTS (NOT IMPLIMENTED)
+6. CX400- CX7FF   VIDEO DAC #2 RAM LOCATIONS
+7. EX000- EX002   63484 VIDEO IC #3 PORTS (NOT IMPLIMENTED)
+8. EX400- EX7FF   VIDEO DAC #3 RAM LOCATIONS
+9. 10XX00-10XX02   SOUND IC I/O PORT
+10. 10XX04-10XX06   SPECIAL CPU READ PORT (8051 interface)
+11. 10XX08-10XX0A   SPECIAL CPU WRITE PORT (8051 interface)
+12. 10XX0C-10XX0E   SPECIAL CPU READ PORT CLEAR (8051 interface)
+13. 10XX10-10XX12   NOT IMPLIMENTED
+14. 10XX14-10XX16   NOT IMPLIMENTED
+15. 10XX18-10XX1A   NOT IMPLIMENTED
+16. 10XX1C-10XX1E   WATCHDOG TIMER CLEAR
 ---
 Posting to Github so others may see the design and possible work on a new board with a few less features not needed for the arcade market but to possibly build a small retro computer with cool graphics and sound for educational purposes.
 
