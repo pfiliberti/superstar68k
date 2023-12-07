@@ -7,10 +7,6 @@
 ;
 ; SuperStar Slot Music routines
 ; Applied Computer Technology
-; 1701 W. Charleston Blvd  #540
-; Las Vegas, NV   89102
-; 702-366-1226
-;
 ; Programmer: Francis Styck
 ; December 3, 1988
 ;
