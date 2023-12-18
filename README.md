@@ -15,19 +15,24 @@ It has a ROM debuger and Tiny Basic which was modified to support the
 GPU internal draw commands. We used this a lot to experiment and to
 exercise the hardware.
 # SUPERSTAR COMPUTER SPECIFICATIONS
-1. CRT Display            : 640 Dots X 200 Rasters X 256 Color per dot (Pixel)
-2. Dot Clock              : 14.318 MHZ
-3. 2Clk                   : 7.159 MHZ
-4. ACRTC Type             : 8 MHZ
-5. Shift Quantity         : 8 Pixels Per Memory Access
-6. Access Mode            : Interleaved access mode
-7. Graphic bit mode       : 8 Bits Per Pixel
-8. Address Increment mode : +4
-9. Graphics Memory Type : HD50464 or Equiv. 64K x 4 bits 120ns QTY=16
-10. Total Graphics Memory : 512K (One Screen = 128,000 bytes)
-11. Main Microprocessor : 68000-8 Cpu
-12. Program ROM Size : 256K WORDS (512K Bytes)
-13. Program RAM Size : 8K Words (16K RAM)
+1. Main Microprocessor : 68000-8 Cpu
+2. Program ROM Size : 256K WORDS (512K Bytes)
+3. Program RAM Size : 8K Words (16K RAM)
+4. CRT Display            : 640 Dots X 200 Rasters X 256 Color per dot (Pixel)
+5. CRT Controller         : HD63484 ACRTC
+6. Total Graphics Memory : 512K (One Screen = 128,000 bytes)
+
+## HD63484 ACRTC Configuration
+1. Dot Clock              : 14.318 MHZ
+2. 2Clk                   : 7.159 MHZ
+3. ACRTC Type             : 8 MHZ
+4. Shift Quantity         : 8 Pixels Per Memory Access
+5. Access Mode            : Interleaved access mode
+6. Graphic bit mode       : 8 Bits Per Pixel
+7. Address Increment mode : +4
+8. Graphics Memory Type : HD50464 or Equiv. 64K x 4 bits 120ns QTY=16
+9. Total Graphics Memory : 512K (One Screen = 128,000 bytes)
+10. Vertical & Horizontal smooth scrolling supported.
 
 ### 68000 Memory Map
 1. 00000- 7FFFF   256K WORDS OF ROM
